@@ -14,7 +14,7 @@ func ShowUsuarios(c *gin.Context) {
 
 	var usuarios []models.Usuario
 
-	err:= db.Order("id desc").Find(&usuarios).Error
+	err := db.Order("id desc").Find(&usuarios).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -83,11 +83,33 @@ func CreateUsuario(c *gin.Context) {
 }
 
 func UpdateUsuario(c *gin.Context) {
+	id := c.Param("id")
+
+	newId, err := strconv.Atoi(id)
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Id precisa ser inteiro",
+		})
+		return
+	}
+
 	db := database.GetDatabase()
 
 	var usuario models.Usuario
 
-	err := c.ShouldBindJSON(&usuario)
+	err = db.First(&usuario, newId).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Registro não encontrado",
+		})
+		return
+	}
+
+	senha := usuario.Senha
+
+	err = c.ShouldBindJSON(&usuario)
 
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -95,8 +117,12 @@ func UpdateUsuario(c *gin.Context) {
 		})
 		return
 	}
-	
-	usuario.Senha = services.SHA256Encoder(usuario.Senha)
+
+	if len(usuario.Senha) > 0 {
+		usuario.Senha = services.SHA256Encoder(usuario.Senha)
+	} else {
+		usuario.Senha = senha
+	}
 
 	err = db.Save(&usuario).Error
 
