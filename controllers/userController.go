@@ -13,14 +13,29 @@ func ShowUsuarios(c *gin.Context) {
 	db := database.GetDatabase()
 
 	var usuarios []models.Usuario
+	
+	search, hasSearch := c.GetQuery("search")
+	searchId, _ := strconv.Atoi(search)
+	search = "%" + search + "%"
 
-	err := db.Order("id desc").Find(&usuarios).Error
+	if(hasSearch){
+		err := db.Where("(id = ?) OR (nome ILIKE ?) or (email ILIKE ?) or (cpf ILIKE ?)", searchId, search, search, search).Order("id desc").Find(&usuarios).Error
 
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "Não foi possível listar os registros.",
-		})
-		return
+		if err != nil {
+			c.JSON(400, gin.H{
+				"error": "Não foi possível listar os registros. " + err.Error(),
+			})
+			return
+		}
+	}else{
+		err := db.Order("id desc").Find(&usuarios).Error
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"error": "Não foi possível listar os registros.",
+			})
+			return
+		}
 	}
 
 	c.JSON(200, usuarios)
