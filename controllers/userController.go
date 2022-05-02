@@ -19,7 +19,7 @@ func ShowUsuarios(c *gin.Context) {
 	search = "%" + search + "%"
 
 	if hasSearch {
-		err := db.Where("(id = ?) OR (nome ILIKE ?) or (email ILIKE ?) or (cpf ILIKE ?)", searchId, search, search, search).Find(&usuarios).Error
+		err := db.Where("(id = ?) OR (nome ILIKE ?) or (email ILIKE ?) or (cpf ILIKE ?)", searchId, search, search, search).Order("id desc").Find(&usuarios).Error
 
 		if err != nil {
 			c.JSON(400, gin.H{
@@ -28,7 +28,7 @@ func ShowUsuarios(c *gin.Context) {
 			return
 		}
 	} else {
-		err := db.Find(&usuarios).Error
+		err := db.Order("id desc").Find(&usuarios).Error
 
 		if err != nil {
 			c.JSON(400, gin.H{
