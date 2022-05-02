@@ -34,18 +34,15 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		api.POST("auth/google", controllers.GoogleLogin)
 		api.GET("/getData", controllers.GetData)
 
-		dashboard := api.Group("dashboard", middlewares.Auth())
-		{
-			dashboard.GET("/", controllers.Dashboard)
-		}
+		api.Use(middlewares.Auth()).GET("/dashboard", controllers.Dashboard)
 
-		usuarios := api.Group("usuarios", middlewares.AuthAdmin())
+		usuarios := api.Group("usuarios")
 		{
-			usuarios.GET("/", controllers.ShowUsuarios)
-			usuarios.POST("/", controllers.CreateUsuario)
-			usuarios.GET("/:id", controllers.ShowUsuario)
-			usuarios.PUT("/:id", controllers.UpdateUsuario)
-			usuarios.DELETE("/:id", controllers.DeleteUsuario)
+			usuarios.Use(middlewares.AuthAdmin()).GET("/", controllers.ShowUsuarios)
+			usuarios.Use(middlewares.AuthAdmin()).POST("/", controllers.CreateUsuario)
+			usuarios.Use(middlewares.AuthAdmin()).GET("/:id", controllers.ShowUsuario)
+			usuarios.Use(middlewares.AuthAdmin()).PUT("/:id", controllers.UpdateUsuario)
+			usuarios.Use(middlewares.AuthAdmin()).DELETE("/:id", controllers.DeleteUsuario)
 		}
 	}
 
