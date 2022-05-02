@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -57,7 +58,7 @@ func (s *jwtService) GenerateToken(id uint) (string, error) {
 
 func (s *jwtService) ValidateToken(token string) bool {
 	_, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
-		if _, isValid := t.Method.(*jwt.SigningMethodHMAC); !isValid{
+		if _, isValid := t.Method.(*jwt.SigningMethodHMAC); !isValid {
 			return nil, fmt.Errorf("token inválido: %v", token)
 		}
 
@@ -65,4 +66,28 @@ func (s *jwtService) ValidateToken(token string) bool {
 	})
 
 	return err == nil
+}
+
+func (s *jwtService) GetIDFromToken(t string) (int64, error) {
+	token, err := jwt.Parse(t, func(token *jwt.Token) (interface{}, error) {
+		if _, isvalid := token.Method.(*jwt.SigningMethodHMAC); !isvalid {
+			return nil, fmt.Errorf("invalid Token: %v", t)
+		}
+		return []byte(os.Getenv("SECRET_KEY")), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		id := fmt.Sprint(claims["sum"])
+		val, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			return 0, err
+		}
+
+		return val, nil
+	}
+
+	return 0, err
 }

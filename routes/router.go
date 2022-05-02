@@ -45,6 +45,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			usuarios.GET("/:id", controllers.ShowUsuario)
 			usuarios.PUT("/:id", controllers.UpdateUsuario)
 			usuarios.DELETE("/:id", controllers.DeleteUsuario)
+			usuarios.GET("/getData", controllers.GetData)
 		}
 	}
 

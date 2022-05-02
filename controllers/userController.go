@@ -176,3 +176,34 @@ func DeleteUsuario(c *gin.Context) {
 
 	c.Status(204)
 }
+
+func GetData(c *gin.Context){
+	const Bearer_schema = "Bearer "
+	header := c.GetHeader("Authorization")
+
+	token := header[len(Bearer_schema):]
+
+	userId, err := services.NewJWTService().GetIDFromToken(token)
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "Não foi possível decodificar o token: " + err.Error(),
+		})
+		return
+	}
+
+	db := database.GetDatabase()
+
+	var usuario models.Usuario
+
+	err = db.Select([]string{"id", "nome", "email", "cargo"}).Where("id = ?", userId).Find(&usuario).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Registro não encontrado: " + err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, usuario)
+}
