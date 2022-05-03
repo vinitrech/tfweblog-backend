@@ -8,4 +8,8 @@ import (
 
 func RunMigrations(db *gorm.DB) {
 	db.AutoMigrate(models.Usuario{})
+	db.AutoMigrate(models.Veiculo{})
+	db.AutoMigrate(models.Cidade{})
+	db.AutoMigrate(models.Estado{})
+	db.AutoMigrate(models.Cliente{})
 }

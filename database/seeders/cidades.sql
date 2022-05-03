@@ -1,9 +1,3 @@
-CREATE TABLE `cidades` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(120) DEFAULT NULL,
-  `id_estado` int(5) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 INSERT INTO `cidades` (`id`, `nome`, `id_estado`) VALUES
 (1, 'Afonso Cláudio', 8),
 (2, 'Água Doce do Norte', 8),
@@ -5572,13 +5566,7 @@ INSERT INTO `cidades` (`id`, `nome`, `id_estado`) VALUES
 (5563, 'Wanderlândia', 27),
 (5564, 'Xambioá', 27);
 
-CREATE TABLE `estados` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(75) DEFAULT NULL,
-  `uf` varchar(5) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `estados` (`id`, `nome`, `uf`) VALUES
+INSERT INTO `estados` (`id`, `nome`, `sigla`) VALUES
 (1, 'Acre', 'AC'),
 (2, 'Alagoas', 'AL'),
 (3, 'Amazonas', 'AM'),
@@ -5606,16 +5594,3 @@ INSERT INTO `estados` (`id`, `nome`, `uf`) VALUES
 (25, 'Sergipe', 'SE'),
 (26, 'São Paulo', 'SP'),
 (27, 'Tocantins', 'TO');
-
-ALTER TABLE `cidades`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_Cidade_estado` (`id_estado`);
-  
-ALTER TABLE `estados`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `cidades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5565;
-
-ALTER TABLE `estados`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
