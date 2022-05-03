@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Categoria struct {
+type Categorias struct {
 	ID        uint           `json:"id" gorm:"primaryKey"`
 	Descricao string         `json:"descricao"`
 	CreatedAt time.Time      `json:"created_at"`
