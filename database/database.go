@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"tfweblog/database/migrations"
@@ -20,13 +19,7 @@ func StartDB() {
 		log.Fatal("Error loading .env file")
 	}
 
-	DB_HOST := os.Getenv("DB_HOST")
-	DB_NAME := os.Getenv("DB_NAME")
-	DB_USER := os.Getenv("DB_USER")
-	DB_PASSWORD := os.Getenv("DB_PASSWORD")
-	DB_PORT := os.Getenv("DB_PORT")
-
-	str := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", DB_HOST, DB_PORT, DB_USER, DB_NAME, DB_PASSWORD)
+	str := os.Getenv("DATABASE_URL")
 
 	database, err := gorm.Open(postgres.Open(str), &gorm.Config{})
 
