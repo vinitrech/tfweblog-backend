@@ -53,6 +53,15 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			veiculos.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateVeiculo)
 			veiculos.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteVeiculo)
 		}
+
+		categorias := api.Group("categorias")
+		{
+			categorias.Use(middlewares.AuthAdminOrSupervisor()).GET("/", controllers.ShowCategorias)
+			categorias.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateCategoria)
+			categorias.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowCategoria)
+			categorias.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateCategoria)
+			categorias.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteCategoria)
+		}
 	}
 
 	return router
