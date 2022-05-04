@@ -9,7 +9,7 @@ import (
 type Cliente struct {
 	ID        uint           `json:"id" gorm:"primaryKey"`
 	Nome      string         `json:"nome"`
-	Cnpj      string         `json:"cnpj"`
+	Cnpj      string         `gorm:"unique" json:"cnpj" `
 	Ativo     bool           `json:"ativo"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

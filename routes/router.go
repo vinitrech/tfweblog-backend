@@ -65,11 +65,11 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		clientes := api.Group("clientes")
 		{
-			clientes.Use(middlewares.AuthAdmin()).GET("/", controllers.ShowClientes)
-			clientes.Use(middlewares.AuthAdmin()).POST("/", controllers.CreateCliente)
-			clientes.Use(middlewares.AuthAdmin()).GET("/:id", controllers.ShowCliente)
-			clientes.Use(middlewares.AuthAdmin()).PUT("/:id", controllers.UpdateCliente)
-			clientes.Use(middlewares.AuthAdmin()).DELETE("/:id", controllers.DeleteCliente)
+			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/", controllers.ShowClientes)
+			clientes.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateCliente)
+			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowCliente)
+			clientes.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateCliente)
+			clientes.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteCliente)
 		}
 	}
 
