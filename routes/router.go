@@ -44,6 +44,15 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			usuarios.Use(middlewares.AuthAdmin()).PUT("/:id", controllers.UpdateUsuario)
 			usuarios.Use(middlewares.AuthAdmin()).DELETE("/:id", controllers.DeleteUsuario)
 		}
+
+		veiculos := api.Group("veiculos")
+		{
+			veiculos.Use(middlewares.AuthAdminOrSupervisor()).GET("/", controllers.ShowVeiculos)
+			veiculos.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateVeiculo)
+			veiculos.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowVeiculo)
+			veiculos.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateVeiculo)
+			veiculos.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteVeiculo)
+		}
 	}
 
 	return router
