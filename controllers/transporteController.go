@@ -183,3 +183,103 @@ func DeleteTransporte(c *gin.Context) {
 
 	c.Status(204)
 }
+
+func EnviarInicioSupervisor(c *gin.Context) {
+	id := c.Param("id")
+
+	newId, err := strconv.Atoi(id)
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Id precisa ser inteiro",
+		})
+		return
+	}
+
+	db := database.GetDatabase()
+
+	err = db.Raw("update table transportes set status = 'aguardando aprovação' where id = ?", newId).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível atualizar a etapa: " + err.Error(),
+		})
+		return
+	}
+	c.Status(204)
+}
+
+func AprovarInicio(c *gin.Context) {
+	id := c.Param("id")
+
+	newId, err := strconv.Atoi(id)
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Id precisa ser inteiro",
+		})
+		return
+	}
+
+	db := database.GetDatabase()
+
+	err = db.Raw("update table transportes set status = 'em andamento' where id = ?", newId).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível atualizar a etapa: " + err.Error(),
+		})
+		return
+	}
+	c.Status(204)
+}
+
+func EnviarFinalizacaoSupervisor(c *gin.Context) {
+	id := c.Param("id")
+
+	newId, err := strconv.Atoi(id)
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Id precisa ser inteiro",
+		})
+		return
+	}
+
+	db := database.GetDatabase()
+
+	err = db.Raw("update table transportes set status = 'aguardando finalização' where id = ?", newId).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível atualizar a etapa: " + err.Error(),
+		})
+		return
+	}
+	c.Status(204)
+}
+
+func Finalizar(c *gin.Context) {
+	id := c.Param("id")
+
+	newId, err := strconv.Atoi(id)
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Id precisa ser inteiro",
+		})
+		return
+	}
+
+	db := database.GetDatabase()
+
+	err = db.Raw("update table transportes set status = 'finalizado' where id = ?", newId).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível atualizar a etapa: " + err.Error(),
+		})
+		return
+	}
+	c.Status(204)
+}

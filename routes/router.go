@@ -84,6 +84,12 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			transportes.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowTransporte)
 			transportes.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateTransporte)
 			transportes.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteTransporte)
+
+			//rotas de manipulação dos status
+			transportes.Use(middlewares.AuthAdminOrDriver()).GET("/:id/enviar-inicio-supervisor", controllers.EnviarInicioSupervisor)
+			transportes.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id/aprovar-inicio", controllers.AprovarInicio)
+			transportes.Use(middlewares.AuthAdminOrDriver()).GET("/:id/enviar-finalizacao-supervisor", controllers.EnviarFinalizacaoSupervisor)
+			transportes.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id/finalizar", controllers.Finalizar)
 		}
 
 		cidades := api.Group("cidades")
