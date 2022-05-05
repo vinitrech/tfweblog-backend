@@ -13,8 +13,6 @@ type Transporte struct {
 	Id_cliente       uint           `json:"id_cliente"`
 	Id_motorista     uint           `json:"id_motorista"`
 	Id_veiculo       uint           `json:"id_veiculo"`
-	Id_administrador uint           `json:"id_administrador"`
-	Id_supervisor    uint           `json:"id_supervisor"`
 	Data_inicio      string         `json:"data_inicio"`
 	Data_finalizacao string         `json:"data_finalizacao"`
 	Status           string         `json:"status"`
