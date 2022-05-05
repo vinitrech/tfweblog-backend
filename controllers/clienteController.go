@@ -165,3 +165,20 @@ func DeleteCliente(c *gin.Context) {
 
 	c.Status(204)
 }
+
+func GetClientes(c *gin.Context) {
+	db := database.GetDatabase()
+
+	var clientes []models.Cliente
+
+	err := db.Where("ativo = true").Order("id desc").Find(&clientes).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível listar os registros.",
+		})
+		return
+	}
+
+	c.JSON(200, clientes)
+}

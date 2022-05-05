@@ -65,6 +65,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		clientes := api.Group("clientes")
 		{
+			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/getAtivos", controllers.GetClientes)
 			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/", controllers.ShowClientes)
 			clientes.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateCliente)
 			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowCliente)
