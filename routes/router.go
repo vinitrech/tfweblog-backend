@@ -71,6 +71,15 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			clientes.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateCliente)
 			clientes.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteCliente)
 		}
+
+		transportes := api.Group("transportes")
+		{
+			transportes.GET("/", controllers.ShowTransportes)
+			transportes.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateTransporte)
+			transportes.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowTransporte)
+			transportes.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateTransporte)
+			transportes.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteTransporte)
+		}
 	}
 
 	return router
