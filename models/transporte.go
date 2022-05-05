@@ -7,21 +7,14 @@ import (
 )
 
 type Transporte struct {
-	ID               uint `json:"id" gorm:"primaryKey"`
-	Id_categoria     uint
-	Categoria        Categorias `json:"categoria" gorm:"ForeignKey:Id_categoria"`
-	Id_cidade        uint
-	Cidade           Cidade `json:"cidade" gorm:"ForeignKey:Id_cidade"`
-	Id_cliente       uint
-	Cliente          Cliente `json:"cliente" gorm:"ForeignKey:Id_cliente"`
-	Id_motorista     uint
-	Motorista        Usuario `json:"motorista" gorm:"ForeignKey:Id_motorista"`
-	Id_veiculo       uint
-	Veiculo          Veiculo `json:"veiculo" gorm:"ForeignKey:Id_veiculo"`
-	Id_administrador uint
-	Administrador    Usuario `json:"administrador" gorm:"ForeignKey:Id_administrador"`
-	Id_supervisor    uint
-	Supervisor       Usuario        `json:"supervisor" gorm:"ForeignKey:Id_supervisor"`
+	ID               uint           `json:"id" gorm:"primaryKey"`
+	Id_categoria     uint           `json:"id_categoria"`
+	Id_cidade        uint           `json:"id_cidade"`
+	Id_cliente       uint           `json:"id_cliente"`
+	Id_motorista     uint           `json:"id_motorista"`
+	Id_veiculo       uint           `json:"id_veiculo"`
+	Id_administrador uint           `json:"id_administrador"`
+	Id_supervisor    uint           `json:"id_supervisor"`
 	Data_inicio      string         `json:"data_inicio"`
 	Data_finalizacao string         `json:"data_finalizacao"`
 	Status           string         `json:"status"`

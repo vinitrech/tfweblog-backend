@@ -4,21 +4,39 @@ import (
 	"strconv"
 	"tfweblog/database"
 	"tfweblog/models"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func ShowTransportes(c *gin.Context) {
 	db := database.GetDatabase()
 
-	var transportes []models.Transporte
+	var arrayTransportes []struct {
+		ID               uint           `json:"id" gorm:"primaryKey"`
+		Id_categoria     uint           `json:"id_categoria"`
+		Id_cidade        uint           `json:"id_cidade"`
+		Id_cliente       uint           `json:"id_cliente"`
+		Id_motorista     uint           `json:"id_motorista"`
+		Id_veiculo       uint           `json:"id_veiculo"`
+		Id_administrador uint           `json:"id_administrador"`
+		Id_supervisor    uint           `json:"id_supervisor"`
+		Data_inicio      string         `json:"data_inicio"`
+		Data_finalizacao string         `json:"data_finalizacao"`
+		Status           string         `json:"status"`
+		CreatedAt        time.Time      `json:"created_at"`
+		UpdatedAt        time.Time      `json:"updated_at"`
+		DeletedAt        gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+		Cliente          string         `json:"cliente"`
+	}
 
 	search, hasSearch := c.GetQuery("search")
 	searchId, _ := strconv.Atoi(search)
 	search = "%" + search + "%"
 
 	if hasSearch {
-		err := db.Where("(id = ?) OR (status ILIKE ?)", searchId, search).Order("id desc").Find(&transportes).Error
+		err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id and (transportes.id = ? or clientes.nome ILIKE ? or transportes.status ILIKE ?)", searchId, search, search).Scan(&arrayTransportes).Error
 
 		if err != nil {
 			c.JSON(400, gin.H{
@@ -27,7 +45,7 @@ func ShowTransportes(c *gin.Context) {
 			return
 		}
 	} else {
-		err := db.Order("id desc").Find(&transportes).Error
+		err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id").Scan(&arrayTransportes).Error
 
 		if err != nil {
 			c.JSON(400, gin.H{
@@ -37,7 +55,7 @@ func ShowTransportes(c *gin.Context) {
 		}
 	}
 
-	c.JSON(200, transportes)
+	c.JSON(200, arrayTransportes)
 }
 
 func ShowTransporte(c *gin.Context) {
