@@ -80,6 +80,11 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			transportes.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateTransporte)
 			transportes.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteTransporte)
 		}
+
+		cidades := api.Group("cidades")
+		{
+			cidades.GET("/", controllers.ShowCidades)
+		}
 	}
 
 	return router
