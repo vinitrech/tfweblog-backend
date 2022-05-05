@@ -207,3 +207,54 @@ func GetData(c *gin.Context){
 
 	c.JSON(200, usuario)
 }
+
+func GetMotoristas(c *gin.Context) {
+	db := database.GetDatabase()
+
+	var usuarios []models.Usuario
+
+	err := db.Where("ativo = true and cargo = 'motorista'").Order("id desc").Find(&usuarios).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível listar os registros.",
+		})
+		return
+	}
+
+	c.JSON(200, usuarios)
+}
+
+func GetAdministradores(c *gin.Context) {
+	db := database.GetDatabase()
+
+	var usuarios []models.Usuario
+
+	err := db.Where("ativo = true and cargo = 'administrador'").Order("id desc").Find(&usuarios).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível listar os registros.",
+		})
+		return
+	}
+
+	c.JSON(200, usuarios)
+}
+
+func GetSupervisores(c *gin.Context) {
+	db := database.GetDatabase()
+
+	var usuarios []models.Usuario
+
+	err := db.Where("ativo = true and cargo = 'supervisor'").Order("id desc").Find(&usuarios).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível listar os registros.",
+		})
+		return
+	}
+
+	c.JSON(200, usuarios)
+}

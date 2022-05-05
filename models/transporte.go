@@ -22,8 +22,8 @@ type Transporte struct {
 	Administrador    Usuario `json:"administrador" gorm:"ForeignKey:Id_administrador"`
 	Id_supervisor    uint
 	Supervisor       Usuario        `json:"supervisor" gorm:"ForeignKey:Id_supervisor"`
-	Data_inicio      time.Time      `json:"data_inicio"`
-	Data_finalizacao time.Time      `json:"data_finalizacao"`
+	Data_inicio      string         `json:"data_inicio"`
+	Data_finalizacao string         `json:"data_finalizacao"`
 	Status           string         `json:"status"`
 	CreatedAt        time.Time      `json:"created_at"`
 	UpdatedAt        time.Time      `json:"updated_at"`

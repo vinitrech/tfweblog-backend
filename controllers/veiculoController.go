@@ -165,3 +165,20 @@ func DeleteVeiculo(c *gin.Context) {
 
 	c.Status(204)
 }
+
+func GetVeiculos(c *gin.Context) {
+	db := database.GetDatabase()
+
+	var veiculos []models.Veiculo
+
+	err := db.Where("ativo = true").Order("id desc").Find(&veiculos).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível listar os registros. " + err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, veiculos)
+}

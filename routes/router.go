@@ -43,6 +43,9 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			usuarios.Use(middlewares.AuthAdmin()).GET("/:id", controllers.ShowUsuario)
 			usuarios.Use(middlewares.AuthAdmin()).PUT("/:id", controllers.UpdateUsuario)
 			usuarios.Use(middlewares.AuthAdmin()).DELETE("/:id", controllers.DeleteUsuario)
+			usuarios.Use(middlewares.AuthAdminOrSupervisor()).GET("/getMotoristas", controllers.GetMotoristas)
+			usuarios.Use(middlewares.AuthAdminOrSupervisor()).GET("/getAdministradores", controllers.GetAdministradores)
+			usuarios.Use(middlewares.AuthAdminOrSupervisor()).GET("/getSupervisores", controllers.GetSupervisores)
 		}
 
 		veiculos := api.Group("veiculos")
@@ -52,6 +55,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			veiculos.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowVeiculo)
 			veiculos.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateVeiculo)
 			veiculos.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteVeiculo)
+			veiculos.Use(middlewares.AuthAdminOrSupervisor()).GET("/getVeiculos", controllers.GetVeiculos)
 		}
 
 		categorias := api.Group("categorias")
@@ -65,7 +69,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		clientes := api.Group("clientes")
 		{
-			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/getAtivos", controllers.GetClientes)
+			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/getClientes", controllers.GetClientes)
 			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/", controllers.ShowClientes)
 			clientes.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateCliente)
 			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowCliente)
