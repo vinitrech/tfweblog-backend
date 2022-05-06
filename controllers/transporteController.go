@@ -30,6 +30,10 @@ func ShowTransportes(c *gin.Context) {
 		UpdatedAt        time.Time      `json:"updated_at"`
 		DeletedAt        gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 		Cliente          string         `json:"cliente"`
+		Motorista        string         `json:"motorista"`
+		Cidade           string         `json:"cidade"`
+		Veiculo          string         `json:"veiculo"`
+		Categoria        string         `json:"categoria"`
 	}
 
 	search, hasSearch := c.GetQuery("search")
@@ -72,7 +76,18 @@ func ShowTransportes(c *gin.Context) {
 
 	if usuario.Cargo == "motorista" {
 		if hasSearch {
-			err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id and (transportes.id = ? or clientes.nome ILIKE ? or transportes.status ILIKE ?) and transportes.id_motorista = ? order by transportes.id desc", searchId, search, search, usuario.ID).Scan(&arrayTransportes).Error
+			err := db.Raw(`
+			select transportes.*, clientes.nome as cliente, usuarios.nome as motorista, veiculos.placa as veiculo, CONCAT(cidades.nome, ' - ',estados.sigla) as cidade, categorias.descricao as categoria
+			from transportes, clientes, usuarios, veiculos, cidades, estados, categorias 
+			where transportes.id_cliente = clientes.id 
+			and usuarios.id = transportes.id_motorista
+			and veiculos.id = transportes.id_veiculo
+			and categorias.id = transportes.id_categoria
+			and transportes.id_cidade = cidades.id
+			and estados.id = cidades.id_estado
+			and (transportes.id = ? or clientes.nome ILIKE ? or transportes.status ILIKE ?)
+			and transportes.id_motorista = ?
+			order by transportes.id desc`, searchId, search, search, usuario.ID).Scan(&arrayTransportes).Error
 
 			if err != nil {
 				c.JSON(400, gin.H{
@@ -81,7 +96,16 @@ func ShowTransportes(c *gin.Context) {
 				return
 			}
 		} else {
-			err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id and transportes.id_motorista = ? order by transportes.id desc", usuario.ID).Scan(&arrayTransportes).Error
+			err := db.Raw(`select transportes.*, clientes.nome as cliente, usuarios.nome as motorista, veiculos.placa as veiculo, CONCAT(cidades.nome, ' - ',estados.sigla) as cidade, categorias.descricao as categoria
+			from transportes, clientes, usuarios, veiculos, cidades, estados, categorias 
+			where transportes.id_cliente = clientes.id 
+			and usuarios.id = transportes.id_motorista
+			and transportes.id_categoria = categorias.id
+			and veiculos.id = transportes.id_veiculo
+			and transportes.id_cidade = cidades.id
+			and estados.id = cidades.id_estado
+			and transportes.id_motorista = ?
+			order by transportes.id desc`, usuario.ID).Scan(&arrayTransportes).Error
 
 			if err != nil {
 				c.JSON(400, gin.H{
@@ -92,7 +116,16 @@ func ShowTransportes(c *gin.Context) {
 		}
 	} else {
 		if hasSearch {
-			err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id and (transportes.id = ? or clientes.nome ILIKE ? or transportes.status ILIKE ?) order by transportes.id desc", searchId, search, search).Scan(&arrayTransportes).Error
+			err := db.Raw(`select transportes.*, clientes.nome as cliente, usuarios.nome as motorista, veiculos.placa as veiculo, CONCAT(cidades.nome, ' - ',estados.sigla) as cidade, categorias.descricao as categoria
+			from transportes, clientes, usuarios, veiculos, cidades, estados, categorias 
+			where transportes.id_cliente = clientes.id 
+			and usuarios.id = transportes.id_motorista
+			and categorias.id = transportes.id_categoria
+			and veiculos.id = transportes.id_veiculo
+			and transportes.id_cidade = cidades.id
+			and estados.id = cidades.id_estado
+			and (transportes.id = ? or clientes.nome ILIKE ? or transportes.status ILIKE ?)
+			order by transportes.id desc`, searchId, search, search).Scan(&arrayTransportes).Error
 
 			if err != nil {
 				c.JSON(400, gin.H{
@@ -101,7 +134,15 @@ func ShowTransportes(c *gin.Context) {
 				return
 			}
 		} else {
-			err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id order by transportes.id desc").Scan(&arrayTransportes).Error
+			err := db.Raw(`select transportes.*, clientes.nome as cliente, usuarios.nome as motorista, veiculos.placa as veiculo, CONCAT(cidades.nome, ' - ',estados.sigla) as cidade, categorias.descricao as categoria
+			from transportes, clientes, usuarios, veiculos, cidades, estados, categorias 
+			where transportes.id_cliente = clientes.id 
+			and usuarios.id = transportes.id_motorista
+			and categorias.id = transportes.id_categoria
+			and veiculos.id = transportes.id_veiculo
+			and transportes.id_cidade = cidades.id
+			and estados.id = cidades.id_estado
+			order by transportes.id desc`).Scan(&arrayTransportes).Error
 
 			if err != nil {
 				c.JSON(400, gin.H{
