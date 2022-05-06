@@ -34,60 +34,62 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		api.POST("auth/google", controllers.GoogleLogin)
 		api.GET("/getData", controllers.GetData)
 
-		api.Use(middlewares.Auth()).GET("/dashboard", controllers.Dashboard)
+		api.Use(middlewares.Auth())
+
+		api.GET("/dashboard", controllers.Dashboard)
 
 		usuarios := api.Group("usuarios")
 		{
-			usuarios.Use(middlewares.AuthAdmin()).GET("/", controllers.ShowUsuarios)
-			usuarios.Use(middlewares.AuthAdmin()).POST("/", controllers.CreateUsuario)
-			usuarios.Use(middlewares.AuthAdmin()).GET("/:id", controllers.ShowUsuario)
-			usuarios.Use(middlewares.AuthAdmin()).PUT("/:id", controllers.UpdateUsuario)
-			usuarios.Use(middlewares.AuthAdmin()).DELETE("/:id", controllers.DeleteUsuario)
-			usuarios.Use(middlewares.AuthAdminOrSupervisor()).GET("/getMotoristas", controllers.GetMotoristas)
-			usuarios.Use(middlewares.AuthAdminOrSupervisor()).GET("/getAdministradores", controllers.GetAdministradores)
-			usuarios.Use(middlewares.AuthAdminOrSupervisor()).GET("/getSupervisores", controllers.GetSupervisores)
+			usuarios.GET("/", middlewares.AuthAdmin(), controllers.ShowUsuarios)
+			usuarios.POST("/", middlewares.AuthAdmin(), controllers.CreateUsuario)
+			usuarios.GET("/:id", middlewares.AuthAdmin(), controllers.ShowUsuario)
+			usuarios.PUT("/:id", middlewares.AuthAdmin(), controllers.UpdateUsuario)
+			usuarios.DELETE("/:id", middlewares.AuthAdmin(), controllers.DeleteUsuario)
+			usuarios.GET("/getMotoristas", middlewares.AuthAdmin(), controllers.GetMotoristas)
+			usuarios.GET("/getAdministradores", middlewares.AuthAdmin(), controllers.GetAdministradores)
+			usuarios.GET("/getSupervisores", middlewares.AuthAdmin(), controllers.GetSupervisores)
 		}
 
 		veiculos := api.Group("veiculos")
 		{
-			veiculos.Use(middlewares.AuthAdminOrSupervisor()).GET("/", controllers.ShowVeiculos)
-			veiculos.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateVeiculo)
-			veiculos.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowVeiculo)
-			veiculos.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateVeiculo)
-			veiculos.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteVeiculo)
-			veiculos.Use(middlewares.AuthAdminOrSupervisor()).GET("/getVeiculos", controllers.GetVeiculos)
+			veiculos.GET("/", middlewares.AuthAdminOrSupervisor(), controllers.ShowVeiculos)
+			veiculos.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateVeiculo)
+			veiculos.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowVeiculo)
+			veiculos.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateVeiculo)
+			veiculos.DELETE("/:id", middlewares.AuthAdminOrSupervisor(), controllers.DeleteVeiculo)
+			veiculos.GET("/getVeiculos", middlewares.AuthAdminOrSupervisor(), controllers.GetVeiculos)
 		}
 
 		categorias := api.Group("categorias")
 		{
-			categorias.Use(middlewares.AuthAdminOrSupervisor()).GET("/", controllers.ShowCategorias)
-			categorias.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateCategoria)
-			categorias.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowCategoria)
-			categorias.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateCategoria)
-			categorias.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteCategoria)
+			categorias.GET("/", middlewares.AuthAdminOrSupervisor(), controllers.ShowCategorias)
+			categorias.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateCategoria)
+			categorias.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowCategoria)
+			categorias.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateCategoria)
+			categorias.DELETE("/:id", middlewares.AuthAdminOrSupervisor(), controllers.DeleteCategoria)
 		}
 
 		clientes := api.Group("clientes")
 		{
-			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/getClientes", controllers.GetClientes)
-			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/", controllers.ShowClientes)
-			clientes.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateCliente)
-			clientes.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowCliente)
-			clientes.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateCliente)
-			clientes.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteCliente)
+			clientes.GET("/getClientes", middlewares.AuthAdminOrSupervisor(), controllers.GetClientes)
+			clientes.GET("/", middlewares.AuthAdminOrSupervisor(), controllers.ShowClientes)
+			clientes.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateCliente)
+			clientes.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowCliente)
+			clientes.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateCliente)
+			clientes.DELETE("/:id", middlewares.AuthAdminOrSupervisor(), controllers.DeleteCliente)
 		}
 
 		transportes := api.Group("transportes")
 		{
-			transportes.GET("/enviar-inicio-supervisor/:id", controllers.EnviarInicioSupervisor)
-			transportes.GET("/aprovar-inicio/:id", controllers.AprovarInicio)
-			transportes.GET("/enviar-finalizacao-supervisor/:id", controllers.EnviarFinalizacaoSupervisor)
-			transportes.GET("/finalizar/:id", controllers.Finalizar)
 			transportes.GET("/", controllers.ShowTransportes)
-			transportes.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateTransporte)
-			transportes.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowTransporte)
-			transportes.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateTransporte)
-			transportes.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteTransporte)
+			transportes.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateTransporte)
+			transportes.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowTransporte)
+			transportes.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateTransporte)
+			transportes.DELETE("/:id", middlewares.AuthAdminOrSupervisor(), controllers.DeleteTransporte)
+			transportes.GET("/enviar-inicio-supervisor/:id", middlewares.AuthAdminOrDriver(), controllers.EnviarInicioSupervisor)
+			transportes.GET("/aprovar-inicio/:id", middlewares.AuthAdminOrSupervisor(), controllers.AprovarInicio)
+			transportes.GET("/enviar-finalizacao-supervisor/:id", middlewares.AuthAdminOrDriver(), controllers.EnviarFinalizacaoSupervisor)
+			transportes.GET("/finalizar/:id", middlewares.AuthAdminOrSupervisor(), controllers.Finalizar)
 		}
 
 		cidades := api.Group("cidades")
