@@ -87,6 +87,7 @@ func ShowTransportes(c *gin.Context) {
 			and estados.id = cidades.id_estado
 			and (transportes.id = ? or clientes.nome ILIKE ? or transportes.status ILIKE ?)
 			and transportes.id_motorista = ?
+			and transportes.deleted_at is null
 			order by transportes.id desc`, searchId, search, search, usuario.ID).Scan(&arrayTransportes).Error
 
 			if err != nil {
@@ -105,6 +106,7 @@ func ShowTransportes(c *gin.Context) {
 			and transportes.id_cidade = cidades.id
 			and estados.id = cidades.id_estado
 			and transportes.id_motorista = ?
+			and transportes.deleted_at is null
 			order by transportes.id desc`, usuario.ID).Scan(&arrayTransportes).Error
 
 			if err != nil {
@@ -125,6 +127,7 @@ func ShowTransportes(c *gin.Context) {
 			and transportes.id_cidade = cidades.id
 			and estados.id = cidades.id_estado
 			and (transportes.id = ? or clientes.nome ILIKE ? or transportes.status ILIKE ?)
+			and transportes.deleted_at is null
 			order by transportes.id desc`, searchId, search, search).Scan(&arrayTransportes).Error
 
 			if err != nil {
@@ -142,6 +145,7 @@ func ShowTransportes(c *gin.Context) {
 			and veiculos.id = transportes.id_veiculo
 			and transportes.id_cidade = cidades.id
 			and estados.id = cidades.id_estado
+			and transportes.deleted_at is null
 			order by transportes.id desc`).Scan(&arrayTransportes).Error
 
 			if err != nil {
