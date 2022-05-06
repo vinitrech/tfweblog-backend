@@ -79,15 +79,15 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		transportes := api.Group("transportes")
 		{
+			transportes.GET("/enviar-inicio-supervisor/:id", controllers.EnviarInicioSupervisor)
+			transportes.GET("/aprovar-inicio/:id", controllers.AprovarInicio)
+			transportes.GET("/enviar-finalizacao-supervisor/:id", controllers.EnviarFinalizacaoSupervisor)
+			transportes.GET("/finalizar/:id", controllers.Finalizar)
 			transportes.GET("/", controllers.ShowTransportes)
 			transportes.Use(middlewares.AuthAdminOrSupervisor()).POST("/", controllers.CreateTransporte)
 			transportes.Use(middlewares.AuthAdminOrSupervisor()).GET("/:id", controllers.ShowTransporte)
 			transportes.Use(middlewares.AuthAdminOrSupervisor()).PUT("/:id", controllers.UpdateTransporte)
 			transportes.Use(middlewares.AuthAdminOrSupervisor()).DELETE("/:id", controllers.DeleteTransporte)
-			transportes.Use(middlewares.AuthAdminOrDriver()).POST("/enviar-inicio-supervisor/:id", controllers.EnviarInicioSupervisor)
-			transportes.Use(middlewares.AuthAdminOrSupervisor()).POST("/aprovar-inicio/:id", controllers.AprovarInicio)
-			transportes.Use(middlewares.AuthAdminOrDriver()).POST("/enviar-finalizacao-supervisor/:id", controllers.EnviarFinalizacaoSupervisor)
-			transportes.Use(middlewares.AuthAdminOrSupervisor()).POST("/finalizar/:id", controllers.Finalizar)
 		}
 
 		cidades := api.Group("cidades")
