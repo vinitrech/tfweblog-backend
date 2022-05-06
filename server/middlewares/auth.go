@@ -108,7 +108,7 @@ func AuthAdminOrSupervisor() gin.HandlerFunc {
 			return
 		}
 
-		if (usuario.Cargo != "administrador") && (usuario.Cargo != "supervisor") {
+		if usuario.Cargo == "motorista" {
 			c.AbortWithStatus(401)
 		}
 	}
@@ -152,7 +152,7 @@ func AuthAdminOrDriver() gin.HandlerFunc {
 			return
 		}
 
-		if (usuario.Cargo != "administrador") && (usuario.Cargo != "motorista") {
+		if usuario.Cargo == "supervisor" {
 			c.AbortWithStatus(401)
 		}
 	}

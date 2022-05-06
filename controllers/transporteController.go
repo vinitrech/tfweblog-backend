@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"tfweblog/database"
 	"tfweblog/models"
+	"tfweblog/services"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -35,23 +36,79 @@ func ShowTransportes(c *gin.Context) {
 	searchId, _ := strconv.Atoi(search)
 	search = "%" + search + "%"
 
-	if hasSearch {
-		err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id and (transportes.id = ? or clientes.nome ILIKE ? or transportes.status ILIKE ?)", searchId, search, search).Scan(&arrayTransportes).Error
+	const Bearer_schema = "Bearer "
 
-		if err != nil {
-			c.JSON(400, gin.H{
-				"error": "Não foi possível listar os registros. " + err.Error(),
-			})
-			return
+	header := c.GetHeader("Authorization")
+
+	if header == "" {
+		c.AbortWithStatus(401)
+	}
+
+	token := header[len(Bearer_schema):]
+
+	if !services.NewJWTService().ValidateToken(token) {
+		c.AbortWithStatus(401)
+	}
+
+	userId, err := services.NewJWTService().GetIDFromToken(token)
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "Não foi possível decodificar o token: " + err.Error(),
+		})
+		return
+	}
+
+	var usuario models.Usuario
+
+	err = db.Select([]string{"id", "nome", "email", "cargo"}).Where("id = ?", userId).Find(&usuario).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Registro não encontrado: " + err.Error(),
+		})
+		return
+	}
+
+	if usuario.Cargo == "motorista" {
+		if hasSearch {
+			err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id and (transportes.id = ? or clientes.nome ILIKE ? or transportes.status ILIKE ?) and transportes.id_motorista = ? order by transportes.id desc", searchId, search, search, usuario.ID).Scan(&arrayTransportes).Error
+
+			if err != nil {
+				c.JSON(400, gin.H{
+					"error": "Não foi possível listar os registros. " + err.Error(),
+				})
+				return
+			}
+		} else {
+			err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id and transportes.id_motorista = ? order by transportes.id desc", usuario.ID).Scan(&arrayTransportes).Error
+
+			if err != nil {
+				c.JSON(400, gin.H{
+					"error": "Não foi possível listar os registros.",
+				})
+				return
+			}
 		}
 	} else {
-		err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id").Scan(&arrayTransportes).Error
+		if hasSearch {
+			err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id and (transportes.id = ? or clientes.nome ILIKE ? or transportes.status ILIKE ?) order by transportes.id desc", searchId, search, search).Scan(&arrayTransportes).Error
 
-		if err != nil {
-			c.JSON(400, gin.H{
-				"error": "Não foi possível listar os registros.",
-			})
-			return
+			if err != nil {
+				c.JSON(400, gin.H{
+					"error": "Não foi possível listar os registros. " + err.Error(),
+				})
+				return
+			}
+		} else {
+			err := db.Raw("select transportes.*, clientes.nome as cliente from transportes, clientes where transportes.id_cliente = clientes.id order by transportes.id desc").Scan(&arrayTransportes).Error
+
+			if err != nil {
+				c.JSON(400, gin.H{
+					"error": "Não foi possível listar os registros.",
+				})
+				return
+			}
 		}
 	}
 
@@ -198,14 +255,28 @@ func EnviarInicioSupervisor(c *gin.Context) {
 
 	db := database.GetDatabase()
 
-	err = db.Raw("update table transportes set status = 'aguardando aprovação' where id = ?", newId).Error
+	var transporte models.Transporte
+
+	err = db.First(&transporte, newId).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "Não foi possível atualizar a etapa: " + err.Error(),
+			"error": "Registro não encontrado",
 		})
 		return
 	}
+
+	transporte.Status = "aguardando aprovação"
+
+	err = db.Save(&transporte).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível alterar o registro: " + err.Error(),
+		})
+		return
+	}
+
 	c.Status(204)
 }
 
@@ -223,14 +294,28 @@ func AprovarInicio(c *gin.Context) {
 
 	db := database.GetDatabase()
 
-	err = db.Raw("update table transportes set status = 'em andamento' where id = ?", newId).Error
+	var transporte models.Transporte
+
+	err = db.First(&transporte, newId).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "Não foi possível atualizar a etapa: " + err.Error(),
+			"error": "Registro não encontrado",
 		})
 		return
 	}
+
+	transporte.Status = "em andamento"
+
+	err = db.Save(&transporte).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível alterar o registro: " + err.Error(),
+		})
+		return
+	}
+
 	c.Status(204)
 }
 
@@ -248,14 +333,28 @@ func EnviarFinalizacaoSupervisor(c *gin.Context) {
 
 	db := database.GetDatabase()
 
-	err = db.Raw("update table transportes set status = 'aguardando finalização' where id = ?", newId).Error
+	var transporte models.Transporte
+
+	err = db.First(&transporte, newId).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "Não foi possível atualizar a etapa: " + err.Error(),
+			"error": "Registro não encontrado",
 		})
 		return
 	}
+
+	transporte.Status = "aguardando finalização"
+
+	err = db.Save(&transporte).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível alterar o registro: " + err.Error(),
+		})
+		return
+	}
+
 	c.Status(204)
 }
 
@@ -273,13 +372,29 @@ func Finalizar(c *gin.Context) {
 
 	db := database.GetDatabase()
 
-	err = db.Raw("update table transportes set status = 'finalizado' where id = ?", newId).Error
+	var transporte models.Transporte
+
+	err = db.First(&transporte, newId).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "Não foi possível atualizar a etapa: " + err.Error(),
+			"error": "Registro não encontrado",
 		})
 		return
 	}
+
+	transporte.Status = "finalizado"
+	t := time.Now()
+	transporte.Data_finalizacao = t.Format("2006-01-02")
+
+	err = db.Save(&transporte).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Não foi possível alterar o registro: " + err.Error(),
+		})
+		return
+	}
+
 	c.Status(204)
 }
