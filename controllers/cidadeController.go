@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"strconv"
 	"tfweblog/database"
 
 	"github.com/gin-gonic/gin"
@@ -15,10 +16,11 @@ func ShowCidades(c *gin.Context) {
 	}
 
 	search, hasSearch := c.GetQuery("search")
+	searchId, _ := strconv.Atoi(search)
 	search = "%" + search + "%"
 
 	if hasSearch {
-		err := db.Raw("select cidades.id, CONCAT(cidades.nome, ' - ', estados.sigla) as nome from cidades join estados on estados.id = cidades.id_estado where cidades.nome ILIKE ? order by estados.sigla, cidades.nome limit 10", search).Scan(&cidades).Error
+		err := db.Raw("select cidades.id, CONCAT(cidades.nome, ' - ', estados.sigla) as nome from cidades join estados on estados.id = cidades.id_estado where (cidades.nome ILIKE ? or cidades.id = ?) order by estados.sigla, cidades.nome limit 10", search, searchId).Scan(&cidades).Error
 
 		if err != nil {
 			c.JSON(400, gin.H{
