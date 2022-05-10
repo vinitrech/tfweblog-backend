@@ -34,10 +34,10 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
-		  return origin == "https://tfweblog-frontend.herokuapp.com"
+			return origin == "https://tfweblog-frontend.herokuapp.com"
 		},
 		MaxAge: 24 * time.Hour,
-	  }))
+	}))
 
 	api := router.Group("api/v1")
 	{
@@ -94,15 +94,105 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		transportes := api.Group("transportes")
 		{
-			transportes.GET("/", controllers.ShowTransportes)
-			transportes.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateTransporte)
-			transportes.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowTransporte)
-			transportes.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateTransporte)
-			transportes.DELETE("/:id", middlewares.AuthAdminOrSupervisor(), controllers.DeleteTransporte)
-			transportes.GET("/enviar-inicio-supervisor/:id", middlewares.AuthAdminOrDriver(), controllers.EnviarInicioSupervisor)
-			transportes.GET("/aprovar-inicio/:id", middlewares.AuthAdminOrSupervisor(), controllers.AprovarInicio)
-			transportes.GET("/enviar-finalizacao-supervisor/:id", middlewares.AuthAdminOrDriver(), controllers.EnviarFinalizacaoSupervisor)
-			transportes.GET("/finalizar/:id", middlewares.AuthAdminOrSupervisor(), controllers.Finalizar)
+			transportes.GET("/", cors.New(cors.Config{
+				AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
+				AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "POST", "GET", "DELETE"},
+				AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+				ExposeHeaders:    []string{"Content-Length"},
+				AllowCredentials: true,
+				AllowOriginFunc: func(origin string) bool {
+					return origin == "https://tfweblog-frontend.herokuapp.com"
+				},
+				MaxAge: 24 * time.Hour,
+			}), controllers.ShowTransportes)
+			transportes.POST("/", cors.New(cors.Config{
+				AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
+				AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "POST", "GET", "DELETE"},
+				AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+				ExposeHeaders:    []string{"Content-Length"},
+				AllowCredentials: true,
+				AllowOriginFunc: func(origin string) bool {
+					return origin == "https://tfweblog-frontend.herokuapp.com"
+				},
+				MaxAge: 24 * time.Hour,
+			}), middlewares.AuthAdminOrSupervisor(), controllers.CreateTransporte)
+			transportes.GET("/:id", cors.New(cors.Config{
+				AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
+				AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "POST", "GET", "DELETE"},
+				AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+				ExposeHeaders:    []string{"Content-Length"},
+				AllowCredentials: true,
+				AllowOriginFunc: func(origin string) bool {
+					return origin == "https://tfweblog-frontend.herokuapp.com"
+				},
+				MaxAge: 24 * time.Hour,
+			}), middlewares.AuthAdminOrSupervisor(), controllers.ShowTransporte)
+			transportes.PUT("/:id", cors.New(cors.Config{
+				AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
+				AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "POST", "GET", "DELETE"},
+				AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+				ExposeHeaders:    []string{"Content-Length"},
+				AllowCredentials: true,
+				AllowOriginFunc: func(origin string) bool {
+					return origin == "https://tfweblog-frontend.herokuapp.com"
+				},
+				MaxAge: 24 * time.Hour,
+			}), middlewares.AuthAdminOrSupervisor(), controllers.UpdateTransporte)
+			transportes.DELETE("/:id", cors.New(cors.Config{
+				AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
+				AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "POST", "GET", "DELETE"},
+				AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+				ExposeHeaders:    []string{"Content-Length"},
+				AllowCredentials: true,
+				AllowOriginFunc: func(origin string) bool {
+					return origin == "https://tfweblog-frontend.herokuapp.com"
+				},
+				MaxAge: 24 * time.Hour,
+			}), middlewares.AuthAdminOrSupervisor(), controllers.DeleteTransporte)
+			transportes.GET("/enviar-inicio-supervisor/:id", cors.New(cors.Config{
+				AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
+				AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "POST", "GET", "DELETE"},
+				AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+				ExposeHeaders:    []string{"Content-Length"},
+				AllowCredentials: true,
+				AllowOriginFunc: func(origin string) bool {
+					return origin == "https://tfweblog-frontend.herokuapp.com"
+				},
+				MaxAge: 24 * time.Hour,
+			}), middlewares.AuthAdminOrDriver(), controllers.EnviarInicioSupervisor)
+			transportes.GET("/aprovar-inicio/:id", cors.New(cors.Config{
+				AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
+				AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "POST", "GET", "DELETE"},
+				AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+				ExposeHeaders:    []string{"Content-Length"},
+				AllowCredentials: true,
+				AllowOriginFunc: func(origin string) bool {
+					return origin == "https://tfweblog-frontend.herokuapp.com"
+				},
+				MaxAge: 24 * time.Hour,
+			}), middlewares.AuthAdminOrSupervisor(), controllers.AprovarInicio)
+			transportes.GET("/enviar-finalizacao-supervisor/:id", cors.New(cors.Config{
+				AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
+				AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "POST", "GET", "DELETE"},
+				AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+				ExposeHeaders:    []string{"Content-Length"},
+				AllowCredentials: true,
+				AllowOriginFunc: func(origin string) bool {
+					return origin == "https://tfweblog-frontend.herokuapp.com"
+				},
+				MaxAge: 24 * time.Hour,
+			}), middlewares.AuthAdminOrDriver(), controllers.EnviarFinalizacaoSupervisor)
+			transportes.GET("/finalizar/:id", cors.New(cors.Config{
+				AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
+				AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "POST", "GET", "DELETE"},
+				AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+				ExposeHeaders:    []string{"Content-Length"},
+				AllowCredentials: true,
+				AllowOriginFunc: func(origin string) bool {
+					return origin == "https://tfweblog-frontend.herokuapp.com"
+				},
+				MaxAge: 24 * time.Hour,
+			}), middlewares.AuthAdminOrSupervisor(), controllers.Finalizar)
 		}
 
 		cidades := api.Group("cidades")
