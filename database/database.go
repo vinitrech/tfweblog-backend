@@ -6,7 +6,6 @@ import (
 	"tfweblog/database/migrations"
 	"time"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -14,10 +13,6 @@ import (
 var db *gorm.DB
 
 func StartDB() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 
 	str := os.Getenv("DATABASE_URL")
 
