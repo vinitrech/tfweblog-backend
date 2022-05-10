@@ -81,15 +81,15 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		transportes := api.Group("transportes")
 		{
-			transportes.GET("/", controllers.ShowTransportes)
-			transportes.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateTransporte)
-			transportes.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowTransporte)
-			transportes.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateTransporte)
-			transportes.DELETE("/:id", middlewares.AuthAdminOrSupervisor(), controllers.DeleteTransporte)
-			transportes.GET("/enviar-inicio-supervisor/:id", middlewares.AuthAdminOrDriver(), controllers.EnviarInicioSupervisor)
-			transportes.GET("/aprovar-inicio/:id", middlewares.AuthAdminOrSupervisor(), controllers.AprovarInicio)
-			transportes.GET("/enviar-finalizacao-supervisor/:id", middlewares.AuthAdminOrDriver(), controllers.EnviarFinalizacaoSupervisor)
-			transportes.GET("/finalizar/:id", middlewares.AuthAdminOrSupervisor(), controllers.Finalizar)
+			transportes.GET("/", CORSMiddleware(), controllers.ShowTransportes)
+			transportes.POST("/", CORSMiddleware(), middlewares.AuthAdminOrSupervisor(), controllers.CreateTransporte)
+			transportes.GET("/:id", CORSMiddleware(), middlewares.AuthAdminOrSupervisor(), controllers.ShowTransporte)
+			transportes.PUT("/:id", CORSMiddleware(), middlewares.AuthAdminOrSupervisor(), controllers.UpdateTransporte)
+			transportes.DELETE("/:id", CORSMiddleware(), middlewares.AuthAdminOrSupervisor(), controllers.DeleteTransporte)
+			transportes.GET("/enviar-inicio-supervisor/:id", CORSMiddleware(), middlewares.AuthAdminOrDriver(), controllers.EnviarInicioSupervisor)
+			transportes.GET("/aprovar-inicio/:id", CORSMiddleware(), middlewares.AuthAdminOrSupervisor(), controllers.AprovarInicio)
+			transportes.GET("/enviar-finalizacao-supervisor/:id", CORSMiddleware(), middlewares.AuthAdminOrDriver(), controllers.EnviarFinalizacaoSupervisor)
+			transportes.GET("/finalizar/:id", CORSMiddleware(), middlewares.AuthAdminOrSupervisor(), controllers.Finalizar)
 		}
 
 		cidades := api.Group("cidades")
