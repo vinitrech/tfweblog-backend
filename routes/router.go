@@ -26,7 +26,14 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	api := router.Group("api/v1")
 	{
 
-		api.Use(cors.New(cors.Config{
+		api.POST("login", controllers.Login)
+		api.POST("cadastro", controllers.Cadastro)
+		api.POST("auth/google", controllers.GoogleLogin)
+		api.GET("/getData", controllers.GetData)
+
+		api.Use(middlewares.Auth())
+
+		api.GET("/dashboard", cors.New(cors.Config{
 			AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
 			AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "DELETE", "GET", "POST"},
 			AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
@@ -36,16 +43,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 				return origin == "https://tfweblog-frontend.herokuapp.com"
 			},
 			MaxAge: 24 * time.Hour,
-		}))
-
-		api.POST("login", controllers.Login)
-		api.POST("cadastro", controllers.Cadastro)
-		api.POST("auth/google", controllers.GoogleLogin)
-		api.GET("/getData", controllers.GetData)
-
-		api.Use(middlewares.Auth())
-
-		api.GET("/dashboard", controllers.Dashboard)
+		}), controllers.Dashboard)
 
 		usuarios := api.Group("usuarios")
 		{
