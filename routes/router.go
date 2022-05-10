@@ -79,6 +79,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		transportes := api.Group("transportes")
 		{
+			transportes.Use(CORSMiddleware())
 			transportes.GET("/", middlewares.Auth(), controllers.ShowTransportes)
 			transportes.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateTransporte)
 			transportes.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowTransporte)
