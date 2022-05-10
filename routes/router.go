@@ -29,8 +29,6 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 	api := router.Group("api/v1")
 	{
-		api.Use(CORSMiddleware())
-
 		api.POST("login", controllers.Login)
 		api.POST("cadastro", controllers.Cadastro)
 		api.POST("auth/google", controllers.GoogleLogin)
