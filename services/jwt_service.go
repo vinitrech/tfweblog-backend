@@ -2,13 +2,11 @@ package services
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/joho/godotenv"
 )
 
 type jwtService struct {
@@ -17,11 +15,6 @@ type jwtService struct {
 }
 
 func NewJWTService() *jwtService {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	key := os.Getenv("SECRET_KEY")
 
 	return &jwtService{
