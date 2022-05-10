@@ -38,8 +38,8 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		usuarios := api.Group("usuarios")
 		{
-			usuarios.GET("/", middlewares.AuthAdmin(), controllers.ShowUsuarios)
-			usuarios.POST("/", middlewares.AuthAdmin(), controllers.CreateUsuario)
+			usuarios.GET("", middlewares.AuthAdmin(), controllers.ShowUsuarios)
+			usuarios.POST("", middlewares.AuthAdmin(), controllers.CreateUsuario)
 			usuarios.GET("/:id", middlewares.AuthAdmin(), controllers.ShowUsuario)
 			usuarios.PUT("/:id", middlewares.AuthAdmin(), controllers.UpdateUsuario)
 			usuarios.DELETE("/:id", middlewares.AuthAdmin(), controllers.DeleteUsuario)
@@ -50,8 +50,8 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		veiculos := api.Group("veiculos")
 		{
-			veiculos.GET("/", middlewares.AuthAdminOrSupervisor(), controllers.ShowVeiculos)
-			veiculos.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateVeiculo)
+			veiculos.GET("", middlewares.AuthAdminOrSupervisor(), controllers.ShowVeiculos)
+			veiculos.POST("", middlewares.AuthAdminOrSupervisor(), controllers.CreateVeiculo)
 			veiculos.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowVeiculo)
 			veiculos.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateVeiculo)
 			veiculos.DELETE("/:id", middlewares.AuthAdminOrSupervisor(), controllers.DeleteVeiculo)
@@ -60,8 +60,8 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		categorias := api.Group("categorias")
 		{
-			categorias.GET("/", middlewares.AuthAdminOrSupervisor(), controllers.ShowCategorias)
-			categorias.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateCategoria)
+			categorias.GET("", middlewares.AuthAdminOrSupervisor(), controllers.ShowCategorias)
+			categorias.POST("", middlewares.AuthAdminOrSupervisor(), controllers.CreateCategoria)
 			categorias.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowCategoria)
 			categorias.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateCategoria)
 			categorias.DELETE("/:id", middlewares.AuthAdminOrSupervisor(), controllers.DeleteCategoria)
@@ -70,8 +70,8 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		clientes := api.Group("clientes")
 		{
 			clientes.GET("/getClientes", middlewares.AuthAdminOrSupervisor(), controllers.GetClientes)
-			clientes.GET("/", middlewares.AuthAdminOrSupervisor(), controllers.ShowClientes)
-			clientes.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateCliente)
+			clientes.GET("", middlewares.AuthAdminOrSupervisor(), controllers.ShowClientes)
+			clientes.POST("", middlewares.AuthAdminOrSupervisor(), controllers.CreateCliente)
 			clientes.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowCliente)
 			clientes.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateCliente)
 			clientes.DELETE("/:id", middlewares.AuthAdminOrSupervisor(), controllers.DeleteCliente)
@@ -79,8 +79,8 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		transportes := api.Group("transportes")
 		{
-			transportes.GET("/", middlewares.Auth(), controllers.ShowTransportes)
-			transportes.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateTransporte)
+			transportes.GET("", middlewares.Auth(), controllers.ShowTransportes)
+			transportes.POST("", middlewares.AuthAdminOrSupervisor(), controllers.CreateTransporte)
 			transportes.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowTransporte)
 			transportes.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateTransporte)
 			transportes.DELETE("/:id", middlewares.AuthAdminOrSupervisor(), controllers.DeleteTransporte)
@@ -92,7 +92,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		cidades := api.Group("cidades")
 		{
-			cidades.GET("/", middlewares.Auth(), controllers.ShowCidades)
+			cidades.GET("", middlewares.Auth(), controllers.ShowCidades)
 		}
 	}
 
