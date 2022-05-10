@@ -3,6 +3,7 @@ package routes
 import (
 	"tfweblog/controllers"
 	"tfweblog/server/middlewares"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -10,7 +11,17 @@ import (
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
-	router.Use(cors.Default())
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"https://tfweblog-frontend.herokuapp.com"},
+		AllowMethods:     []string{"PUT", "PATCH", "OPTIONS", "DELETE", "GET", "POST"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "https://tfweblog-frontend.herokuapp.com"
+		},
+		MaxAge: 24 * time.Hour,
+	}))
 
 	api := router.Group("api/v1")
 	{
