@@ -34,9 +34,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		api.POST("auth/google", controllers.GoogleLogin)
 		api.GET("/getData", controllers.GetData)
 
-		api.Use(middlewares.Auth())
-
-		api.GET("/dashboard", controllers.Dashboard)
+		api.GET("/dashboard", middlewares.Auth(), controllers.Dashboard)
 
 		usuarios := api.Group("usuarios")
 		{
@@ -81,7 +79,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		transportes := api.Group("transportes")
 		{
-			transportes.GET("/", controllers.ShowTransportes)
+			transportes.GET("/", middlewares.Auth(), controllers.ShowTransportes)
 			transportes.POST("/", middlewares.AuthAdminOrSupervisor(), controllers.CreateTransporte)
 			transportes.GET("/:id", middlewares.AuthAdminOrSupervisor(), controllers.ShowTransporte)
 			transportes.PUT("/:id", middlewares.AuthAdminOrSupervisor(), controllers.UpdateTransporte)
@@ -94,7 +92,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		cidades := api.Group("cidades")
 		{
-			cidades.GET("/", controllers.ShowCidades)
+			cidades.GET("/", middlewares.Auth(), controllers.ShowCidades)
 		}
 	}
 
