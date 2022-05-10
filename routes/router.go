@@ -4,10 +4,13 @@ import (
 	"tfweblog/controllers"
 	"tfweblog/server/middlewares"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
+
+	router.Use(cors.Default())
 
 	api := router.Group("api/v1")
 	{

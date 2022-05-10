@@ -4,7 +4,6 @@ import (
 	"log"
 	"tfweblog/routes"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,6 +19,5 @@ func NewServer() Server {
 
 func (s *Server) Run() {
 	router := routes.ConfigRoutes(s.server)
-	router.Use(cors.Default())
 	log.Fatal(router.Run())
 }
