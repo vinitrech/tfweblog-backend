@@ -16,7 +16,6 @@ type jwtService struct {
 
 func NewJWTService() *jwtService {
 	key := os.Getenv("SECRET_KEY")
-	// key := "d19u6s0rnuf8v8thcrawyaaedlqj885577a4e809df7b1f5a0630cfcb429381ed0bd221fde9d540702a193804aa27"
 
 	return &jwtService{
 		secretKey: key,
@@ -68,7 +67,6 @@ func (s *jwtService) GetIDFromToken(t string) (int64, error) {
 			return nil, fmt.Errorf("invalid Token: %v", t)
 		}
 		return []byte(os.Getenv("SECRET_KEY")), nil
-		// return []byte("d19u6s0rnuf8v8thcrawyaaedlqj885577a4e809df7b1f5a0630cfcb429381ed0bd221fde9d540702a193804aa27"), nil
 	})
 	if err != nil {
 		return 0, err
