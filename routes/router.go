@@ -10,6 +10,7 @@ import (
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "https://tfweblog-frontend.herokuapp.com")
+		// c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
@@ -88,6 +89,12 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			transportes.GET("/aprovar-inicio/:id", middlewares.AuthAdminOrSupervisor(), controllers.AprovarInicio)
 			transportes.GET("/enviar-finalizacao-supervisor/:id", middlewares.AuthAdminOrDriver(), controllers.EnviarFinalizacaoSupervisor)
 			transportes.GET("/finalizar/:id", middlewares.AuthAdminOrSupervisor(), controllers.Finalizar)
+		}
+
+		documentos := api.Group("transportes/:id/documentos")
+		{
+			documentos.GET("", middlewares.Auth(), controllers.ShowDocumentos)
+			documentos.POST("", middlewares.Auth(), controllers.CreateDocumento)
 		}
 
 		cidades := api.Group("cidades")
