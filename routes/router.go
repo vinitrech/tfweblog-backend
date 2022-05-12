@@ -102,6 +102,20 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			avaliacoes.POST("", middlewares.Auth(), controllers.CreateAvaliacao)
 			avaliacoes.GET("/:idAvaliacao/visualizar", middlewares.Auth(), controllers.ShowAvaliacao)
 		}
+		
+		avisos := api.Group("transportes/:id/avisos")
+		{
+			avisos.GET("", middlewares.Auth(), controllers.ShowAvisos)
+			avisos.POST("", middlewares.Auth(), controllers.CreateAviso)
+			avisos.GET("/:idAviso/visualizar", middlewares.Auth(), controllers.ShowAviso)
+		}
+
+		incidentes := api.Group("transportes/:id/incidentes")
+		{
+			incidentes.GET("", middlewares.Auth(), controllers.ShowIncidentes)
+			incidentes.POST("", middlewares.Auth(), controllers.CreateIncidente)
+			incidentes.GET("/:idIncidente/visualizar", middlewares.Auth(), controllers.ShowIncidente)
+		}
 
 		cidades := api.Group("cidades")
 		{
