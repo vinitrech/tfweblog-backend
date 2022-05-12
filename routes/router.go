@@ -34,7 +34,10 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		api.POST("auth/google", controllers.GoogleLogin)
 		api.GET("/getData", controllers.GetData)
 
-		api.GET("/dashboard", middlewares.Auth(), controllers.Dashboard)
+		api.GET("/getIncidentes", middlewares.Auth(), controllers.GetIncidentes)
+		api.GET("/getTransportesStatus", middlewares.Auth(), controllers.GetTransportesStatus)
+		api.GET("/getTransportesPorCliente", middlewares.Auth(), controllers.GetTransportesPorCliente)
+		api.GET("/getTransportesPorMotorista", middlewares.Auth(), controllers.GetTransportesPorMotorista)
 
 		usuarios := api.Group("usuarios")
 		{
